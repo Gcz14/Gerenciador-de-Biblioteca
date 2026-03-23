@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Pessoal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        button.danger {
+            background: #e53e3e;
+        }
+
+        button.danger:hover {
+            background: #c53030;
+        }
+
+        .livro-card {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .livro-card h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .livro-card p {
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-disponivel {
+            background: #48bb78;
+            color: white;
+        }
+
+        .status-lido {
+            background: #4299e1;
+            color: white;
+        }
+
+        .status-emprestado {
+            background: #ed8936;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .flex {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .login-info {
+            text-align: right;
+            color: white;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="login-info" id="loginInfo">
+            Não autenticado
+        </div>
+
+        <!-- Login Card -->
+        <div class="card" id="loginCard">
+            <h2>Login</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="Digite seu email">
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" id="loginSenha" placeholder="Digite sua senha">
+            </div>
+            <button onclick="login()">Entrar</button>
+            <button onclick="showRegister()">Cadastrar-se</button>
+        </div>
+
+        <!-- Register Card -->
+        <div class="card hidden" id="registerCard">
+            <h2>Cadastro</h2>
+            <div class="form-group">
+                <label>Nome</label>
+                <input type="text" id="registerNome" placeholder="Seu nome">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="registerEmail" placeholder="Seu email">
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" id="registerSenha" placeholder="Sua senha">
+            </div>
+            <button onclick="register()">Cadastrar</button>
+            <button onclick="showLogin()">Voltar</button>
+        </div>
+
+        <!-- Livros Card -->
+        <div class="card hidden" id="livrosCard">
+            <h2>Meus Livros</h2>
+
+            <div class="form-group">
+                <h3>Adicionar Livro</h3>
+                <div class="flex">
+                    <input type="text" id="livroTitulo" placeholder="Título" style="flex: 2">
+                    <input type="text" id="livroAutor" placeholder="Autor" style="flex: 1">
+                </div>
+                <div class="flex">
+                    <input type="text" id="livroIsbn" placeholder="ISBN" style="flex: 1">
+                    <input type="number" id="livroAno" placeholder="Ano" style="flex: 1">
+                    <input type="text" id="livroCategoria" placeholder="Categoria" style="flex: 1">
+                </div>
+                <div class="flex">
+                    <textarea id="livroDescricao" placeholder="Descrição" rows="2" style="flex: 2"></textarea>
+                    <select id="livroStatus" style="flex: 1">
+                        <option value="DISPONIVEL">Disponível</option>
+                        <option value="LIDO">Lido</option>
+                        <option value="EMPRESTADO">Emprestado</option>
+                    </select>
+                </div>
+                <button onclick="criarLivro()">Adicionar Livro</button>
+            </div>
+
+            <div id="lista-livros"></div>
+        </div>
+    </div>
+
+    <script>
+        let token = null;
+        let userId = null;
+
+        const API_URL = 'http://localhost:9999/api';
+
+        function showRegister() {
+            document.getElementById('loginCard').classList.add('hidden');
+            document.getElementById('registerCard').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('registerCard').classList.add('hidden');
+            document.getElementById('loginCard').classList.remove('hidden');
+        }
+
+        async function register() {
+            const nome = document.getElementById('registerNome').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const senha = document.getElementById('registerSenha').value.trim();
+
+            if (!nome || !email || !senha) {
+                alert('⚠️ Preencha todos os campos!');
+                return;
+            }
+
+            if (senha.length < 6) {
+                alert('⚠️ A senha deve ter no mínimo 6 caracteres!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/users/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, email, senha })
+                });
+
+                if (response.ok) {
+                    alert('✅ Cadastro realizado! Faça login.');
+                    showLogin();
+                    document.getElementById('registerNome').value = '';
+                    document.getElementById('registerEmail').value = '';
+                    document.getElementById('registerSenha').value = '';
+                } else {
+                    const error = await response.json();
+                    if (error.fields) {
+                        let errorMsg = '❌ Erro de validação:\n';
+                        for (const [field, message] of Object.entries(error.fields)) {
+                            errorMsg += `\n• ${field}: ${message}`;
+                        }
+                        alert(errorMsg);
+                    } else {
+                        alert(`❌ Erro: ${error.message || 'Erro ao cadastrar'}`);
+                    }
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('❌ Erro ao conectar com o servidor');
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const senha = document.getElementById('loginSenha').value.trim();
+
+            if (!email || !senha) {
+                alert('⚠️ Preencha email e senha!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/users/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    token = data.token;
+                    userId = data.userId;
+
+                    document.getElementById('loginInfo').innerHTML = `✅ Logado como: ${data.email}`;
+                    document.getElementById('loginCard').classList.add('hidden');
+                    document.getElementById('livrosCard').classList.remove('hidden');
+
+                    carregarLivros();
+                } else {
+                    const error = await response.json();
+                    alert(`❌ Login falhou: ${error.message || 'Email ou senha inválidos'}`);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('❌ Erro ao conectar com o servidor');
+            }
+        }
+        async function carregarLivros() {
+            try {
+                const response = await fetch(`${API_URL}/livros`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const livros = await response.json();
+                    mostrarLivros(livros);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar livros:', error);
+            }
+        }
+
+        function mostrarLivros(livros) {
+            const container = document.getElementById('lista-livros');
+            if (livros.length === 0) {
+                container.innerHTML = '<p>Nenhum livro cadastrado.</p>';
+                return;
+            }
+
+            container.innerHTML = livros.map(livro => `
+                <div class="livro-card">
+                    <h3>${livro.titulo}</h3>
+                    <p><strong>Autor:</strong> ${livro.autor}</p>
+                    <p><strong>ISBN:</strong> ${livro.isbn || 'N/A'}</p>
+                    <p><strong>Ano:</strong> ${livro.anoPublicacao || 'N/A'}</p>
+                    <p><strong>Categoria:</strong> ${livro.categoria || 'N/A'}</p>
+                    <p><strong>Descrição:</strong> ${livro.descricao || 'N/A'}</p>
+                    <p><strong>Status:</strong> <span class="status status-${livro.status.toLowerCase()}">${livro.status}</span></p>
+                    <div class="flex">
+                        <button onclick="editarLivro('${livro.id}')">Editar</button>
+                        <button class="danger" onclick="deletarLivro('${livro.id}')">Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function criarLivro() {
+            const livro = {
+                titulo: document.getElementById('livroTitulo').value.trim(),
+                autor: document.getElementById('livroAutor').value.trim(),
+                isbn: document.getElementById('livroIsbn').value.trim(),
+                anoPublicacao: parseInt(document.getElementById('livroAno').value) || null,
+                categoria: document.getElementById('livroCategoria').value.trim(),
+                descricao: document.getElementById('livroDescricao').value.trim(),
+                status: document.getElementById('livroStatus').value
+            };
+
+            // Validação básica no frontend
+            if (!livro.titulo) {
+                alert('⚠️ Título é obrigatório!');
+                return;
+            }
+            if (!livro.autor) {
+                alert('⚠️ Autor é obrigatório!');
+                return;
+            }
+            if (!livro.status) {
+                alert('⚠️ Status é obrigatório!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/livros`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(livro)
+                });
+
+                if (response.ok) {
+                    alert('✅ Livro adicionado com sucesso!');
+                    document.getElementById('livroTitulo').value = '';
+                    document.getElementById('livroAutor').value = '';
+                    document.getElementById('livroIsbn').value = '';
+                    document.getElementById('livroAno').value = '';
+                    document.getElementById('livroCategoria').value = '';
+                    document.getElementById('livroDescricao').value = '';
+                    carregarLivros();
+                } else {
+                    const error = await response.json();
+                    // Mostra o erro detalhado do backend
+                    if (error.fields) {
+                        let errorMsg = '❌ Erro de validação:\n';
+                        for (const [field, message] of Object.entries(error.fields)) {
+                            errorMsg += `\n• ${field}: ${message}`;
+                        }
+                        alert(errorMsg);
+                    } else {
+                        alert(`❌ Erro: ${error.message || 'Erro ao criar livro'}`);
+                    }
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('❌ Erro ao conectar com o servidor: ' + error.message);
+            }
+        }
+
+        async function deletarLivro(id) {
+            if (!confirm('Tem certeza que deseja excluir este livro?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/livros/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    alert('Livro excluído!');
+                    carregarLivros();
+                } else {
+                    alert('Erro ao excluir livro');
+                }
+            } catch (error) {
+                alert('Erro: ' + error.message);
+            }
+        }
+
+        async function editarLivro(id) {
+            const novoTitulo = prompt('Novo título:');
+            if (!novoTitulo) return;
+
+            try {
+                const response = await fetch(`${API_URL}/livros/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        ...(await (await fetch(`${API_URL}/livros/${id}`, { headers: { 'Authorization': `Bearer ${token}` } })).json()),
+                        titulo: novoTitulo
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Livro atualizado!');
+                    carregarLivros();
+                } else {
+                    alert('Erro ao atualizar livro');
+                }
+            } catch (error) {
+                alert('Erro: ' + error.message);
+            }
+        }
+    </script>
+</body>
+
+</html>
