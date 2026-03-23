@@ -2,7 +2,9 @@ package com.biblioteca.controller;
 
 import com.biblioteca.dto.LivroRequestDTO;
 import com.biblioteca.dto.LivroResponseDTO;
+import com.biblioteca.security.JwtService;
 import com.biblioteca.service.LivroService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,35 +18,43 @@ import java.util.List;
 public class LivroController {
 
     private final LivroService livroService;
-    
-    // Por enquanto vamos usar um ID fixo para teste
-    // Depois vamos pegar do token JWT
-    private static final String USUARIO_TESTE_ID = "69bf2db636151283511d3cf2"; // ID do seu usuário de teste
+    private final JwtService jwtService;
+
+    private String getUsuarioIdFromToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        String token = authHeader.substring(7);
+        return jwtService.extractUserId(token);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public LivroResponseDTO criarLivro(@RequestBody @Valid LivroRequestDTO dto) {
-        return livroService.criarLivro(dto, USUARIO_TESTE_ID);
+    public LivroResponseDTO criarLivro(@RequestBody @Valid LivroRequestDTO dto, HttpServletRequest request) {
+        String usuarioId = getUsuarioIdFromToken(request);
+        return livroService.criarLivro(dto, usuarioId);
     }
 
     @GetMapping
-    public List<LivroResponseDTO> listarLivros() {
-        return livroService.listarLivrosPorUsuario(USUARIO_TESTE_ID);
+    public List<LivroResponseDTO> listarLivros(HttpServletRequest request) {
+        String usuarioId = getUsuarioIdFromToken(request);
+        return livroService.listarLivrosPorUsuario(usuarioId);
     }
 
     @GetMapping("/{id}")
-    public LivroResponseDTO buscarPorId(@PathVariable String id) {
-        return livroService.buscarPorId(id, USUARIO_TESTE_ID);
+    public LivroResponseDTO buscarPorId(@PathVariable String id, HttpServletRequest request) {
+        String usuarioId = getUsuarioIdFromToken(request);
+        return livroService.buscarPorId(id, usuarioId);
     }
 
     @PutMapping("/{id}")
-    public LivroResponseDTO atualizarLivro(@PathVariable String id, @RequestBody @Valid LivroRequestDTO dto) {
-        return livroService.atualizarLivro(id, dto, USUARIO_TESTE_ID);
+    public LivroResponseDTO atualizarLivro(@PathVariable String id, @RequestBody @Valid LivroRequestDTO dto, HttpServletRequest request) {
+        String usuarioId = getUsuarioIdFromToken(request);
+        return livroService.atualizarLivro(id, dto, usuarioId);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletarLivro(@PathVariable String id) {
-        livroService.deletarLivro(id, USUARIO_TESTE_ID);
+    public void deletarLivro(@PathVariable String id, HttpServletRequest request) {
+        String usuarioId = getUsuarioIdFromToken(request);
+        livroService.deletarLivro(id, usuarioId);
     }
 }
