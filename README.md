@@ -157,7 +157,7 @@ Entregar uma aplicação completa, funcional e testada, seguindo boas práticas 
 
 cd biblioteca
 
-mvnw.cmd spring-boot:run
+mvnw.cmd spring-boot:run  
 
 ## post
 

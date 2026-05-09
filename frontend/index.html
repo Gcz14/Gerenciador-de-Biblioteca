@@ -5,185 +5,437 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biblioteca Pessoal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            /* ── Palette ── */
+            --mist-1:  #dbe1e3;
+            --mist-2:  #c0cbcd;
+            --mist-3:  #b0b8ba;
+            --mist-4:  #d8e4e9;
+            --mist-5:  #a7c7cb;
+
+            /* ── Semantic tokens ── */
+            --glass-bg:     rgba(168, 196, 201, 0.08);
+            --glass-border: rgba(216, 228, 233, 0.20);
+            --glass-shadow: 0 8px 52px rgba(10, 22, 30, 0.45), 0 2px 8px rgba(10,22,30,0.18);
+            --blur: blur(24px);
+
+            --accent:     #a7c7cb;
+            --accent-dim: rgba(167,199,203,0.55);
+            --text:       #dbe1e3;
+            --text-dim:   #b0b8ba;
+            --text-muted: rgba(176,184,186,0.55);
+
+            --input-bg:     rgba(167,199,203,0.07);
+            --input-border: rgba(192,203,205,0.22);
+
+            --btn-bg-start: #a7c7cb;
+            --btn-bg-end:   #7eadb3;
+            --btn-text:     #0f1e22;
+
+            --radius-card: 22px;
+            --radius-sm:   10px;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: "Poppins", sans-serif;
             min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        h1,
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: bold;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-right: 10px;
-        }
-
-        button:hover {
-            background: #5a67d8;
-        }
-
-        button.danger {
-            background: #e53e3e;
-        }
-
-        button.danger:hover {
-            background: #c53030;
-        }
-
-        .livro-card {
-            background: #f7fafc;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-
-        .livro-card h3 {
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .livro-card p {
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .status-disponivel {
-            background: #48bb78;
-            color: white;
-        }
-
-        .status-lido {
-            background: #4299e1;
-            color: white;
-        }
-
-        .status-emprestado {
-            background: #ed8936;
-            color: white;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .flex {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            background: #0b1519;
+            color: var(--text);
+        }
+
+        /* ══ ANIMATED BACKGROUND ══ */
+        .bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-canvas::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 75% 55% at 15%  8%,  rgba(167,199,203,0.28) 0%, transparent 65%),
+                radial-gradient(ellipse 55% 65% at 88% 18%,  rgba(192,203,205,0.18) 0%, transparent 60%),
+                radial-gradient(ellipse 65% 45% at 50% 92%,  rgba(216,228,233,0.14) 0%, transparent 60%),
+                radial-gradient(ellipse 45% 75% at  3% 78%,  rgba(176,184,186,0.12) 0%, transparent 60%),
+                linear-gradient(160deg, #0b1519 0%, #0e1c22 50%, #0a1318 100%);
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.38;
+            animation: blobFloat linear infinite;
+        }
+        .blob-1 {
+            width: 560px; height: 560px;
+            background: radial-gradient(circle, rgba(167,199,203,0.65), rgba(126,173,179,0.12));
+            top: -140px; left: -120px;
+            animation-duration: 24s; animation-delay: 0s;
+        }
+        .blob-2 {
+            width: 420px; height: 420px;
+            background: radial-gradient(circle, rgba(192,203,205,0.50), rgba(168,182,185,0.08));
+            top: 8%; right: -100px;
+            animation-duration: 30s; animation-delay: -9s;
+        }
+        .blob-3 {
+            width: 370px; height: 370px;
+            background: radial-gradient(circle, rgba(216,228,233,0.40), rgba(192,210,218,0.08));
+            bottom: 4%; left: 18%;
+            animation-duration: 34s; animation-delay: -16s;
+        }
+        .blob-4 {
+            width: 290px; height: 290px;
+            background: radial-gradient(circle, rgba(176,184,186,0.38), rgba(144,158,162,0.06));
+            bottom: 18%; right: 8%;
+            animation-duration: 20s; animation-delay: -5s;
+        }
+
+        @keyframes blobFloat {
+            0%   { transform: translate(0,0)        scale(1);    }
+            25%  { transform: translate(28px,-38px) scale(1.05); }
+            50%  { transform: translate(-18px,28px) scale(0.95); }
+            75%  { transform: translate(36px,18px)  scale(1.03); }
+            100% { transform: translate(0,0)        scale(1);    }
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(216,228,233,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(216,228,233,0.03) 1px, transparent 1px);
+            background-size: 52px 52px;
+        }
+
+        .bg-noise {
+            position: absolute;
+            inset: 0;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
+        }
+
+        /* ══ LAYOUT ══ */
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1100px;
+            padding: 32px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
 
         .login-info {
-            text-align: right;
-            color: white;
-            margin-bottom: 20px;
+            position: fixed;
+            top: 20px;
+            right: 28px;
+            color: var(--text-dim);
+            font-size: 12px;
+            letter-spacing: 0.04em;
+            font-weight: 300;
+            z-index: 10;
+            background: rgba(11,21,25,0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 7px 18px;
+            border-radius: 40px;
+            border: 1px solid rgba(192,203,205,0.16);
+        }
+
+        /* ══ GLASS CARD ══ */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-card);
+            box-shadow: var(--glass-shadow);
+            padding: 42px 46px;
+            width: 100%;
+            max-width: 480px;
+            animation: cardIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0)    scale(1);    }
+        }
+
+        #livrosCard { max-width: 820px; }
+
+        /* ══ TYPOGRAPHY ══ */
+        h1, h2 {
+            font-weight: 600;
+            color: var(--mist-4);
+            margin-bottom: 28px;
+            font-size: 1.7rem;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        /* ══ FORM ══ */
+        .form-group { margin-bottom: 16px; }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 10.5px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.10em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: var(--radius-sm);
+            font-size: 13.5px;
+            font-family: "Poppins", sans-serif;
+            color: var(--text);
+            font-weight: 300;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: rgba(167,199,203,0.45);
+            background: rgba(167,199,203,0.10);
+            box-shadow: 0 0 0 3px rgba(167,199,203,0.10);
+        }
+
+        select option {
+            background: #111e24;
+            color: var(--text);
+        }
+
+        textarea { resize: vertical; }
+
+        /* ══ BUTTONS ══ */
+        button {
+            background: linear-gradient(135deg, var(--btn-bg-start) 0%, var(--btn-bg-end) 100%);
+            color: var(--btn-text);
+            border: none;
+            padding: 10px 22px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 12.5px;
+            font-family: "Poppins", sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            margin-right: 8px;
+            transition: transform 0.18s, box-shadow 0.18s, filter 0.18s;
+            box-shadow: 0 2px 16px rgba(167,199,203,0.22);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 26px rgba(167,199,203,0.32);
+            filter: brightness(1.06);
+        }
+
+        button:active { transform: translateY(0); }
+
+        button.danger {
+            background: linear-gradient(135deg, rgba(180,90,90,0.82), rgba(130,40,40,0.82));
+            color: #f0dede;
+            box-shadow: 0 2px 14px rgba(180,90,90,0.20);
+        }
+
+        button.danger:hover {
+            box-shadow: 0 6px 24px rgba(180,90,90,0.34);
+            filter: brightness(1.08);
+        }
+
+        /* ══ BOOK CARDS ══ */
+        .livro-card {
+            background: rgba(167,199,203,0.055);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(192,203,205,0.13);
+            border-left: 3px solid var(--accent);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            transition: background 0.2s, transform 0.22s;
+        }
+
+        .livro-card:hover {
+            background: rgba(167,199,203,0.09);
+            transform: translateX(4px);
+        }
+
+        .livro-card h3 {
+            font-size: 1rem;
+            text-transform: none;
+            letter-spacing: 0;
+            color: var(--mist-4);
+            margin-bottom: 6px;
+        }
+
+        .livro-card p {
+            color: var(--text-dim);
+            font-size: 12.5px;
+            margin-bottom: 4px;
+            font-weight: 300;
+        }
+
+        .livro-card p strong {
+            color: var(--mist-2);
+            font-weight: 500;
+        }
+
+        /* ══ STATUS BADGES ══ */
+        .status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10.5px;
+            font-weight: 500;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+
+        .status-disponivel {
+            background: rgba(167,199,203,0.16);
+            color: #c0dfe2;
+            border: 1px solid rgba(167,199,203,0.28);
+        }
+
+        .status-lido {
+            background: rgba(192,203,205,0.14);
+            color: #d4dee0;
+            border: 1px solid rgba(192,203,205,0.26);
+        }
+
+        .status-emprestado {
+            background: rgba(216,228,233,0.13);
+            color: #c4d8e0;
+            border: 1px solid rgba(216,228,233,0.24);
+        }
+
+        /* ══ UTILS ══ */
+        .flex { display: flex; gap: 10px; margin-top: 10px; }
+        .hidden { display: none; }
+
+        .divider {
+            height: 1px;
+            background: rgba(192,203,205,0.10);
+            margin: 24px 0;
+        }
+
+        #lista-livros {
+            max-height: 520px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        #lista-livros::-webkit-scrollbar { width: 3px; }
+        #lista-livros::-webkit-scrollbar-track { background: transparent; }
+        #lista-livros::-webkit-scrollbar-thumb {
+            background: rgba(167,199,203,0.22);
+            border-radius: 2px;
+        }
+
+        #lista-livros p { color: var(--text-dim); font-size: 13px; }
+
+        /* ══ RESPONSIVE ══ */
+        @media (max-width: 600px) {
+            .card { padding: 28px 22px; }
+            .flex { flex-direction: column; }
+            .login-info { top: 10px; right: 14px; font-size: 11px; padding: 6px 12px; }
         }
     </style>
 </head>
 
 <body>
+    <div class="bg-canvas">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
+        <div class="bg-grid"></div>
+        <div class="bg-noise"></div>
+    </div>
+
     <div class="container">
-        <div class="login-info" id="loginInfo">
-            Não autenticado
-        </div>
+        <div class="login-info" id="loginInfo">Não autenticado</div>
 
         <!-- Login Card -->
         <div class="card" id="loginCard">
-            <h2>Login</h2>
+            <h2>Entrar</h2>
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" id="loginEmail" placeholder="Digite seu email">
+                <input type="email" id="loginEmail" placeholder="seu@email.com">
             </div>
             <div class="form-group">
                 <label>Senha</label>
-                <input type="password" id="loginSenha" placeholder="Digite sua senha">
+                <input type="password" id="loginSenha" placeholder="••••••••">
             </div>
-            <button onclick="login()">Entrar</button>
-            <button onclick="showRegister()">Cadastrar-se</button>
+            <div style="margin-top:24px;">
+                <button onclick="login()">Entrar</button>
+                <button onclick="showRegister()">Cadastrar-se</button>
+            </div>
         </div>
 
         <!-- Register Card -->
         <div class="card hidden" id="registerCard">
-            <h2>Cadastro</h2>
+            <h2>Criar conta</h2>
             <div class="form-group">
                 <label>Nome</label>
-                <input type="text" id="registerNome" placeholder="Seu nome">
+                <input type="text" id="registerNome" placeholder="Seu nome completo">
             </div>
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" id="registerEmail" placeholder="Seu email">
+                <input type="email" id="registerEmail" placeholder="seu@email.com">
             </div>
             <div class="form-group">
                 <label>Senha</label>
-                <input type="password" id="registerSenha" placeholder="Sua senha">
+                <input type="password" id="registerSenha" placeholder="Mínimo 6 caracteres">
             </div>
-            <button onclick="register()">Cadastrar</button>
-            <button onclick="showLogin()">Voltar</button>
+            <div style="margin-top:24px;">
+                <button onclick="register()">Cadastrar</button>
+                <button onclick="showLogin()">Voltar</button>
+            </div>
         </div>
 
         <!-- Livros Card -->
         <div class="card hidden" id="livrosCard">
-            <h2>Meus Livros</h2>
-
+            <h2>Minha Biblioteca</h2>
             <div class="form-group">
                 <h3>Adicionar Livro</h3>
                 <div class="flex">
@@ -203,9 +455,11 @@
                         <option value="EMPRESTADO">Emprestado</option>
                     </select>
                 </div>
-                <button onclick="criarLivro()">Adicionar Livro</button>
+                <div style="margin-top:14px;">
+                    <button onclick="criarLivro()">Adicionar Livro</button>
+                </div>
             </div>
-
+            <div class="divider"></div>
             <div id="lista-livros"></div>
         </div>
     </div>
@@ -307,6 +561,7 @@
                 alert('❌ Erro ao conectar com o servidor');
             }
         }
+
         async function carregarLivros() {
             try {
                 const response = await fetch(`${API_URL}/livros`, {
@@ -357,19 +612,9 @@
                 status: document.getElementById('livroStatus').value
             };
 
-            // Validação básica no frontend
-            if (!livro.titulo) {
-                alert('⚠️ Título é obrigatório!');
-                return;
-            }
-            if (!livro.autor) {
-                alert('⚠️ Autor é obrigatório!');
-                return;
-            }
-            if (!livro.status) {
-                alert('⚠️ Status é obrigatório!');
-                return;
-            }
+            if (!livro.titulo) { alert('⚠️ Título é obrigatório!'); return; }
+            if (!livro.autor)  { alert('⚠️ Autor é obrigatório!');  return; }
+            if (!livro.status) { alert('⚠️ Status é obrigatório!'); return; }
 
             try {
                 const response = await fetch(`${API_URL}/livros`, {
@@ -392,7 +637,6 @@
                     carregarLivros();
                 } else {
                     const error = await response.json();
-                    // Mostra o erro detalhado do backend
                     if (error.fields) {
                         let errorMsg = '❌ Erro de validação:\n';
                         for (const [field, message] of Object.entries(error.fields)) {
