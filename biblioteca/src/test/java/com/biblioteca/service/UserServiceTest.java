@@ -1,5 +1,7 @@
 package com.biblioteca.service;
 
+
+
 import com.biblioteca.config.TestcontainersConfig;
 import com.biblioteca.dto.UserRequestDTO;
 import com.biblioteca.dto.UserResponseDTO;
@@ -94,5 +96,30 @@ class UserServiceTest extends TestcontainersConfig {
         userService.deletar(created.id());
 
         assertThat(userRepository.findById(created.id())).isEmpty();
+    }
+
+        @Test
+    void deveLancarExcecaoAoAtualizarUsuarioComEmailDuplicado() {
+        // Criar primeiro usuário
+        User primeiroUser = new User();
+        primeiroUser.setNome("Primeiro");
+        primeiroUser.setEmail("primeiro@email.com");
+        primeiroUser.setSenha(passwordEncoder.encode("senha123"));
+        userRepository.save(primeiroUser);
+        
+        // Criar segundo usuário
+        User segundoUser = new User();
+        segundoUser.setNome("Segundo");
+        segundoUser.setEmail("segundo@email.com");
+        segundoUser.setSenha(passwordEncoder.encode("senha456"));
+        User savedSegundo = userRepository.save(segundoUser);
+        
+        // Tentar atualizar segundo usuário com email do primeiro
+        UserRequestDTO dto = new UserRequestDTO("Segundo Atualizado", "primeiro@email.com", "senha789");
+        
+        org.junit.jupiter.api.Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> userService.atualizar(savedSegundo.getId(), dto)
+        );
     }
 }
