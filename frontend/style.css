@@ -526,34 +526,21 @@ button.danger:hover {
     font-weight: 500;
 }
 
-/* ══ STATUS BADGES ══ */
+/* ══ STATUS BADGES - estilo único para todos ══ */
 .status {
     display: inline-block;
-    padding: 3px 10px;
-    border-radius: 20px;
+    padding: 4px 14px;
+    border-radius: 30px;
     font-size: 10.5px;
     font-weight: 500;
     letter-spacing: 0.07em;
     text-transform: uppercase;
+    background: rgba(167, 199, 203, 0.18);
+    color: #d4e6ea;
+    border: 1px solid rgba(167, 199, 203, 0.35);
+    backdrop-filter: blur(4px);
 }
 
-.status-disponivel {
-    background: rgba(167, 199, 203, 0.16);
-    color: #c0dfe2;
-    border: 1px solid rgba(167, 199, 203, 0.28);
-}
-
-.status-lido {
-    background: rgba(192, 203, 205, 0.14);
-    color: #d4dee0;
-    border: 1px solid rgba(192, 203, 205, 0.26);
-}
-
-.status-emprestado {
-    background: rgba(216, 228, 233, 0.13);
-    color: #c4d8e0;
-    border: 1px solid rgba(216, 228, 233, 0.24);
-}
 
 /* ══ UTILS ══ */
 .flex {
