@@ -1,191 +1,170 @@
-# 📚 Projeto Semestral — Gerenciador de Biblioteca Pessoal
+# 📚 Gerenciador de Biblioteca Pessoal
 
-## 🎯 Visão Geral
+[![Java](https://img.shields.io/badge/Java-17-blue.svg)](https://adoptium.net/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.3-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Latest-green.svg)](https://www.mongodb.com/)
+[![Coverage](https://img.shields.io/badge/JaCoCo-80%25-brightgreen.svg)](https://www.jacoco.org/)
+[![SonarCloud](https://img.shields.io/badge/SonarCloud-Passing-brightgreen.svg)](https://sonarcloud.io/)
 
-Este projeto tem como objetivo o desenvolvimento de uma aplicação completa para gerenciamento de uma biblioteca pessoal, permitindo que usuários realizem o cadastro e controle de seus livros.
-
-O sistema contará com autenticação de usuários, operações completas de CRUD para livros e persistência de dados em banco NoSQL, seguindo boas práticas de arquitetura, qualidade de código e testabilidade.
-
----
-
-## 📌 Requisitos do Projeto
-
-### ✅ Requisitos Funcionais
-
-* Cadastro de usuários
-* Autenticação (login)
-* Gerenciamento de sessão
-* CRUD completo de livros:
-
-  * Criar livro
-  * Listar livros
-  * Atualizar livro
-  * Deletar livro
-* Associação de livros a um usuário
+Sistema completo para gerenciamento de biblioteca pessoal com autenticação JWT, CRUD de livros e persistência em MongoDB. Desenvolvido com Spring Boot no backend e HTML/CSS/JS no frontend.
 
 ---
 
-### ⚙️ Requisitos Técnicos
+## ✅ Funcionalidades
 
-#### Backend
-
-* Java com Spring Boot
-* Arquitetura MVC
-* Banco de dados MongoDB    
-
-#### Frontend
-
-* Interface Web funcional
-* Design responsivo
-* Gerenciamento de sessão
-
-#### Testes
-
-* Cobertura mínima de 80%
-* Testes unitários e de integração
-* Testes de controller (E2E)
+- Cadastro e autenticação de usuários com JWT
+- Gerenciamento de sessão
+- CRUD completo de livros
+- Interface web responsiva
+- Persistência em MongoDB
 
 ---
 
-## 🚫 Restrições e Proibições
+## 🛠️ Tecnologias
 
-* ❌ Uso de mocks (Mockito ou similares) está proibido
-* ❌ Não utilizar banco fake (H2, in-memory, etc.)
-* ❌ Não ignorar testes automatizados
-
----
-
-## 🧪 Estratégia de Testes
-
-Para garantir qualidade e aderência aos requisitos, serão utilizadas as seguintes ferramentas:
-
-* **Testcontainers**
-
-  * Execução de testes com banco MongoDB real em container
-
-* **VCR (Virtual Cassette Recorder)**
-
-  * Gravação e replay de chamadas externas (caso existam integrações)
-
-### Tipos de testes:
-
-* Testes unitários (camada de serviço)
-* Testes de integração (repositórios + banco)
-* Testes de controller (requisições HTTP reais)
-* Testes parametrizados (múltiplos cenários)
-* Testes caixa branca (lógica interna)
-* Testes caixa preta (fluxos completos)
+| Tecnologia | Versão |
+|------------|--------|
+| Java | 17.0.18 (Temurin) |
+| Spring Boot | 4.0.3 |
+| Maven | 3.9.12 |
+| MongoDB | Latest (Docker) |
+| Docker | 29.2.1 |
+| JUnit | 5.12.1 |
+| JaCoCo | 0.8.11 |
+| SonarCloud | SaaS |
 
 ---
 
-## 🏗️ Arquitetura da Aplicação
+## 📋 Pré-requisitos
 
-O sistema seguirá o padrão arquitetural **MVC (Model-View-Controller)**.
-
-### Estrutura do Backend:
-
-* `controller` → Camada de entrada (requisições HTTP)
-* `service` → Regras de negócio
-* `repository` → Acesso ao banco de dados
-* `model` → Entidades do sistema
-* `dto` → Objetos de transferência de dados
-* `config` → Configurações gerais
+- [Java 17+](https://adoptium.net/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [VS Code](https://code.visualstudio.com/) com extensão Live Server
+- Git
 
 ---
 
-## 🧰 Tecnologias Utilizadas
+## 🚀 Como Executar
 
-### Backend
+### 1. Clone o repositório
 
-* Java 17+
-* Spring Boot
-* Spring Data MongoDB
-* Lombok
-* BCrypt (criptografia de senha)
+```bash
+git clone https://github.com/Gcz14/Gerenciador-de-Biblioteca.git
+cd Gerenciador-de-Biblioteca
+```
 
-### Testes
+### 2. Inicie o MongoDB com Docker
 
-* JUnit 5
-* Testcontainers
-* JaCoCo (relatório de cobertura)
+```bash
+docker run -d --name mongodb-biblioteca -p 27017:27017 mongo:latest
+docker ps
+```
 
-### Frontend
+### 3. Execute o Backend
 
-* HTML, CSS
-
----
-
-## 📄 Documentação Obrigatória
-
-O projeto deverá conter:
-
-### 📌 README.md
-
-* Descrição do projeto
-* Tecnologias utilizadas
-* Instruções de execução
-
-### 📌 RTM.md (Matriz de Rastreabilidade)
-
-* Mapeamento entre requisitos e testes
-* Cobertura total dos requisitos
-* Inclusão de diagramas UML de sequência
-
----
-
-## 🚀 Estratégia de Desenvolvimento
-
-A ordem de desenvolvimento será:
-
-1. Configuração do backend
-2. Modelagem das entidades
-3. Implementação do CRUD de livros
-4. Implementação da autenticação
-5. Desenvolvimento dos testes automatizados
-6. Desenvolvimento do frontend
-7. Documentação final
-
----
-
-## 🎯 Objetivo Final
-
-Entregar uma aplicação completa, funcional e testada, seguindo boas práticas de desenvolvimento, com alta qualidade de código e cobertura de testes adequada.
-
-
-
-## rodar o projeto (terminal)
-
+```bash
 cd biblioteca
+.\mvnw.cmd spring-boot:run
+```
 
-mvnw.cmd spring-boot:run  
-   ## para testes
+> O backend estará disponível em: `http://localhost:9999`
+
+### 4. Execute o Frontend
+
+1. Abra a pasta `frontend` no VS Code
+2. Clique com o botão direito no `index.html`
+3. Selecione **"Open with Live Server"**
+
+---
+
+## 🧪 Testes
+
+### Executar todos os testes
+
+```bash
 cd biblioteca
+.\mvnw.cmd test
+```
 
+### Executar um teste específico
 
-.\mvnw.cmd test 
+```bash
+.\mvnw.cmd test -Dtest=NomeDoTeste
+```
 
-## post
+### Gerar relatório de cobertura (JaCoCo)
 
-curl -X POST http://localhost:9999/api/users ^
--H "Content-Type: application/json" ^
--d "{\"nome\":\"Gui\",\"email\":\"gui@email.com\",\"senha\":\"123456\"}"
+```bash
+cd biblioteca
+.\mvnw.cmd test jacoco:report
+```
 
-## VERIFICAR BANCO
+> Relatório disponível em: `biblioteca/target/site/jacoco/index.html`
 
-docker exec -it mongo mongosh
+**Cobertura atual: 80% ✅**
 
-  ## ver quais bancos existem
+---
 
-  show dbs
+## 📡 Endpoints da API
 
-  ## ENTRAR NO BANCO
+### Usuários
 
-  use (nome do banco)
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `POST` | `/api/users/register` | Cadastrar usuário |
+| `POST` | `/api/users/login` | Login (retorna token JWT) |
+| `GET` | `/api/users/{id}` | Buscar usuário por ID |
+| `PUT` | `/api/users/{id}` | Atualizar usuário |
+| `DELETE` | `/api/users/{id}` | Deletar usuário |
 
-  ## VER COLLECTIONS
+### Livros *(requer token JWT)*
 
-  show collections
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `POST` | `/api/livros` | Criar livro |
+| `GET` | `/api/livros` | Listar livros do usuário |
+| `GET` | `/api/livros/{id}` | Buscar livro por ID |
+| `PUT` | `/api/livros/{id}` | Atualizar livro |
+| `DELETE` | `/api/livros/{id}` | Deletar livro |
 
-  ## LISTAR TODOS OS USUÁRIOS
+---
 
-  db.users.find().pretty()
+## 📁 Estrutura do Projeto
+
+```
+Gerenciador-de-Biblioteca/
+├── biblioteca/                 # Backend Spring Boot
+│   ├── src/main/java/...       # Código fonte
+│   ├── src/test/java/...       # Testes
+│   └── pom.xml                 # Dependências
+├── frontend/                   # Frontend HTML/CSS/JS
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+├── .github/workflows/          # CI/CD
+├── README.md
+└── RTM.md                      # Matriz de rastreabilidade
+```
+
+---
+
+## 📊 Qualidade e CI/CD
+
+- **SonarCloud** — análise estática de código
+- **GitHub Actions** — pipeline automatizado (build, testes, cobertura)
+- **JaCoCo** — relatório de cobertura (80%)
+- **Testcontainers** — testes de integração com MongoDB real (sem mocks)
+
+---
+
+## 👨‍💻 Autores
+
+- **Guilherme Ribeiro** — [@Gcz14](https://github.com/Gcz14)
+- **Geovana Oliveira da Silva** — [@Giholliveiraa](https://github.com/Giholliveiraa)
+
+---
+
+## 📄 Licença
+
+Projeto acadêmico — Semestre Letivo 2026.1
+**Disciplina:** Qualidade de Software — Prof. Afonso Lelis
