@@ -28,4 +28,4 @@ jobs:
       run: cd biblioteca && mvn test jacoco:report
 
     - name: SonarQube Scan
-      run: cd biblioteca && mvn sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+      run: cd biblioteca && mvn sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
