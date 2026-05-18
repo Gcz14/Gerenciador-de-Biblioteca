@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Import(TestcontainersConfig.class)
 class JwtServiceTest {
 
     @Autowired

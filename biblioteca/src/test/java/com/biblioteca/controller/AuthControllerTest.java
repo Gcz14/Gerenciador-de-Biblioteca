@@ -2,7 +2,6 @@ package com.biblioteca.controller;
 
 import com.biblioteca.config.TestcontainersConfig;
 import com.biblioteca.dto.UserRequestDTO;
-import com.biblioteca.model.User;
 import com.biblioteca.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +19,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@Import(TestcontainersConfig.class)
 class AuthControllerTest {
 
     @Autowired
