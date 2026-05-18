@@ -19,7 +19,8 @@
 | Cobertura de testes | 80% (JaCoCo) |
 | Uso de mocks | Nenhum (proibido) |
 | Testcontainers | Configurado |
-| Testes totais | 29+ |
+| Testes totais | 33 |
+| VCR | Não aplicável (sem chamadas externas) |
 
 ## Status Geral
 
@@ -27,3 +28,14 @@
 ✅ Backend MVC
 ✅ CRUD completo
 ✅ Autenticação JWT
+
+## Diagramas UML de Sequência
+
+### RF01 - Cadastrar Usuário
+![Diagrama de Cadastro](docs/diagrama-cadastro.png)
+
+### RF02 - Realizar Login
+![Diagrama de Login](docs/diagrama-login.png)
+
+### RF03 - Criar Livro
+![Diagrama de Criar Livro](docs/diagrama-livro.png)
