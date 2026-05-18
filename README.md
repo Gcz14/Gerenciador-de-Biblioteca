@@ -157,6 +157,25 @@ Gerenciador-de-Biblioteca/
 
 ---
 
+### 📊 Relatório de Cobertura
+
+![JaCoCo Coverage](docs/jacoco.png)
+
+---
+
+## 📐 Diagramas UML de Sequência
+
+### Cadastro de Usuário
+![Diagrama de Cadastro](docs/diagrama-cadastro.png)
+
+### Login
+![Diagrama de Login](docs/diagrama-login.png)
+
+### Criar Livro
+![Diagrama de Criar Livro](docs/diagrama-livro.png)
+
+---
+
 ## 👨‍💻 Autores
 
 - **Guilherme Ribeiro** — [@Gcz14](https://github.com/Gcz14)
