@@ -22,10 +22,10 @@ jobs:
         distribution: 'temurin'
 
     - name: Build with Maven
-      run: mvn clean compile
+      run: cd biblioteca && mvn clean compile
 
     - name: Run tests with coverage
-      run: mvn test jacoco:report
+      run: cd biblioteca && mvn test jacoco:report
 
     - name: SonarQube Scan
-      run: mvn sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+      run: cd biblioteca && mvn sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
